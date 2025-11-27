@@ -13,10 +13,13 @@ class Token {
      * Generate a cryptographically secure hexadecimal token.
      * 
      * Uses random_bytes() to generate a token consisting of hexadecimal characters (0-9, a-f).
-     * More efficient than character-based string generation for hex-only tokens.
+     * More efficient than Randomness::generateString() when you only need hexadecimal output.
+     * 
+     * For custom character sets (alphanumeric, special characters, etc.), use 
+     * Randomness::generateString() instead.
      * 
      * @param int $length The desired length of the token (must be positive)
-     * @return string The generated hexadecimal token
+     * @return string The generated hexadecimal token (lowercase a-f, 0-9)
      * @throws \InvalidArgumentException If length is not positive
      * @throws \Exception If random_bytes() fails (extremely rare)
      */
@@ -30,6 +33,7 @@ class Token {
 
         $token = bin2hex( random_bytes( $bytesNeeded ) );
 
-        return mb_substr( $token, 0, $length );
+        // Use substr since bin2hex always produces ASCII hexadecimal characters
+        return substr( $token, 0, $length );
     }
 }
